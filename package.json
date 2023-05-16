@@ -1,0 +1,50 @@
+{
+  "name": "@cfx-kit/wallet-avatar",
+  "private": true,
+  "version": "0.0.1",
+  "main": "wallet-avatar.bundle.js",
+  "module": "index.js",
+  "jsnext:main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rf ./dist && tsc && rollup -c rollup.config.js -i dist/index.js > dist/wallet-avatar.bundle.js",
+    "format": "prettier --write ./src ./test",
+    "prettier": "pretty-quick --staged",
+    "preview": "vite preview"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier"
+    }
+  },
+  "keywords": [
+    "metamask",
+    "wallet",
+    "avatar",
+    "fluent",
+    "conflux"
+  ],
+  "author": "Lin Wang <843022618@qq.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fluent-wallet/avatar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fluent-wallet/avatar/issues"
+  },
+  "homepage": "https://github.com/fluent-wallet/avatar#readme",
+  "devDependencies": {
+    "hooks": "latest",
+    "husky": "latest",
+    "prettier": "latest",
+    "pretty-quick": "latest",
+    "rollup": "^2.70.2",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.2"
+  },
+  "dependencies": {
+    "@types/mersenne-twister": "^1.1.2",
+    "mersenne-twister": "^1.1.0"
+  }
+}
