@@ -1,6 +1,5 @@
 {
   "name": "@cfx-kit/wallet-avatar",
-  "private": true,
   "version": "0.0.1",
   "main": "wallet-avatar.bundle.js",
   "module": "index.js",
@@ -8,7 +7,7 @@
   "types": "index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf ./dist && tsc && rollup -c rollup.config.js -i dist/index.js > dist/wallet-avatar.bundle.js",
+    "build": "rm -rf ./dist && tsc && rollup -c rollup.config.js -i dist/index.js > dist/wallet-avatar.bundle.js && node ./tools/copy.js",
     "format": "prettier --write ./src ./test",
     "prettier": "pretty-quick --staged",
     "preview": "vite preview"
