@@ -90,7 +90,6 @@ export class WalletAvatarGenerate {
 
     generateAvatarURL(address: string) {
         const html = this.generateAvatarHTML(address);
-        console.log(html);
         return `data:image/svg+xml;base64,${btoa(html)}`;
     }
 
