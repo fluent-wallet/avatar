@@ -1,6 +1,6 @@
 {
   "name": "@cfx-kit/wallet-avatar",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "wallet-avatar.bundle.js",
   "module": "index.js",
   "jsnext:main": "index.js",

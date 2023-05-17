@@ -1,4 +1,5 @@
 import MersenneTwister from 'mersenne-twister';
+import html from './html';
 
 const colors = [
     '#01888C', // teal
@@ -81,43 +82,38 @@ function addressToNumber(address: string): number {
 export class WalletAvatarGenerate {
     constructor(public mt: MersenneTwister) {}
     generateAvatarSvg(address: string) {
+        const html = this.generateAvatarHTML(address);
+        const temp = document.createElement('template');
+        temp.innerHTML = html;
+        return temp.content.firstChild as SVGSVGElement;
+    }
+
+    generateAvatarURL(address: string) {
+        const html = this.generateAvatarHTML(address);
+        console.log(html);
+        return `data:image/svg+xml;base64,${btoa(html)}`;
+    }
+
+    generateAvatarHTML(address: string) {
         this.mt.init_seed(addressToNumber(address));
         const remainingColors = this.hueShift(colors.slice());
         const bgColor = this.genColor(remainingColors);
+        const bgRectHTML = html`<rect x="0" y="0" width="100" height="100" fill="${bgColor}"></rect>`;
 
-        const svg = document.createElementNS(svgNamespaceURI, 'svg');
-        svg.setAttributeNS(null, 'x', '0');
-        svg.setAttributeNS(null, 'y', '0');
-        svg.setAttributeNS(null, 'width', '100%');
-        svg.setAttributeNS(null, 'height', '100%');
-        svg.setAttribute('viewBox', '0 0 100 100');
+        const items = Array(shapeCount - 1)
+            .fill('$')
+            .map((_, i) => {
+                return this.genShape(remainingColors, i, shapeCount - 1);
+            });
 
-        const bgRect = document.createElementNS(svgNamespaceURI, 'rect');
-        bgRect.setAttribute('x', '0');
-        bgRect.setAttribute('y', '0');
-        bgRect.setAttribute('width', '100');
-        bgRect.setAttribute('height', '100');
-        bgRect.setAttribute('fill', bgColor);
+        const svgHTML = html`<svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="${svgNamespaceURI}">${bgRectHTML}${items}</svg>`;
 
-        svg.appendChild(bgRect);
-
-        for (var i = 0; i < shapeCount - 1; i++) {
-            this.genShape(remainingColors, i, shapeCount - 1, svg);
-        }
-
-        return svg;
+        return svgHTML.getHTML();
     }
 
-    genShape(remainingColors: Array<string>, i: number, total: number, svg: Element) {
+    genShape(remainingColors: Array<string>, i: number, total: number) {
         const diameter = 100;
         const center = diameter / 2;
-
-        const shape = document.createElementNS(svgNamespaceURI, 'rect');
-        shape.setAttributeNS(null, 'x', '0');
-        shape.setAttributeNS(null, 'y', '0');
-        shape.setAttributeNS(null, 'width', diameter.toString());
-        shape.setAttributeNS(null, 'height', diameter.toString());
-
         const firstRot = this.mt.random();
         const angle = Math.PI * 2 * firstRot;
         const velocity = (diameter / total) * this.mt.random() + (i * diameter) / total;
@@ -126,17 +122,14 @@ export class WalletAvatarGenerate {
         const ty = Math.sin(angle) * velocity;
 
         const translate = 'translate(' + tx + ' ' + ty + ')';
-
-        // Third random is a shape rotation on top of all of that.
         const secondRot = this.mt.random();
         const rot = firstRot * 360 + secondRot * 180;
         const rotate = 'rotate(' + rot.toFixed(1) + ' ' + center + ' ' + center + ')';
         const transform = translate + ' ' + rotate;
-        shape.setAttributeNS(null, 'transform', transform);
         const fill = this.genColor(remainingColors);
-        shape.setAttributeNS(null, 'fill', fill);
 
-        svg.appendChild(shape);
+        const rectHTML = html`<rect x="0" y="0" width="${diameter}" height="${diameter}" transform="${transform}" fill="${fill}"></rect>`;
+        return rectHTML;
     }
     genColor(colors: Array<string>) {
         // must call once
@@ -193,9 +186,19 @@ export class WalletAvatarGenerate {
     }
 }
 
-function generateSVGIcon(address: string) {
+export function generateAvatarSVG(address: string) {
     const wag = new WalletAvatarGenerate(new MersenneTwister());
     return wag.generateAvatarSvg(address);
 }
 
-export default generateSVGIcon;
+export function generateAvatarURL(address: string) {
+    const wag = new WalletAvatarGenerate(new MersenneTwister());
+    return wag.generateAvatarURL(address);
+}
+
+export function generateAvatarHTML(address: string) {
+    const wag = new WalletAvatarGenerate(new MersenneTwister());
+    return wag.generateAvatarHTML(address);
+}
+
+export default generateAvatarSVG;
