@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rm -rf ./dist && tsc && rollup -c rollup.config.js -i dist/index.js > dist/wallet-avatar.bundle.js && node ./tools/copy.js",
+    "build:beta": "rm -rf ./dist && tsc && rollup -c rollup.config.js -i dist/index.js > dist/wallet-avatar.bundle.js && node ./tools/copy.js --beta",
     "format": "prettier --write ./src ./test",
     "prettier": "pretty-quick --staged",
     "preview": "vite preview"
