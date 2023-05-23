@@ -8,11 +8,17 @@
 ![https://img.shields.io/github/issues-raw/ssbarbee/@cfx-kit/wallet-avatar](https://img.shields.io/github/issues-raw/ssbarbee/@cfx-kit/wallet-avatar)
 ![https://img.shields.io/npm/dw/@cfx-kit/wallet-avatar](https://img.shields.io/npm/dw/@cfx-kit/wallet-avatar)
 
-🤡 A library for generate MetaMask avatars based on account address
+🤡 A library for generate MetaMask avatars based on account address.
+
+✨ For example, use the metamask account to generate an avatar. You can get the same avatar as metamask. Of course you don't have to use metamask account.
+
+🤣 Say goodbye to boring blocky identicons that look like they came out of the 70s, and replace them with jazzy, colorful collages that more likely came out of the 80's.
 
 ## Overview 🧐
 
 The `@cfx-kit/wallet-avatar` library is a collection of functions that can help you generate the same avatar as metamask. Install it and look at its definition and you'll be up and running in no time.
+
+![example](./doc//example.png)
 
 ## Installation 📦
 
