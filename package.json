@@ -1,6 +1,6 @@
 {
   "name": "@cfx-kit/wallet-avatar",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "wallet-avatar.bundle.js",
   "module": "index.js",
   "jsnext:main": "index.js",
@@ -22,6 +22,7 @@
     "react",
     "web3",
     "metamask",
+    "jazzicon",
     "wallet",
     "avatar",
     "typescript",
