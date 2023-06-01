@@ -93,6 +93,50 @@ export class WalletAvatarGenerate {
         return `data:image/svg+xml;base64,${btoa(html)}`;
     }
 
+    private canvasRender(address: string, size: number) {
+        const diameter = size;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        canvas.height = canvas.width = size;
+        this.mt.init_seed(addressToNumber(address));
+        const remainingColors = this.hueShift(colors.slice());
+        const bgColor = this.genColor(remainingColors);
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, diameter, diameter);
+        for (let i = 0; i < shapeCount - 1; i++) {
+            const total = shapeCount - 1;
+            const firstRot = this.mt.random();
+            const angle = Math.PI * 2 * firstRot;
+            const velocity = (diameter * this.mt.random()) / total + (diameter * i) / total;
+
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            const secondRot = this.mt.random();
+            const rot = firstRot * 360 + secondRot * 180;
+            const fill = this.genColor(remainingColors);
+
+            const p = new Path2D();
+            p.rect(0, 0, diameter, diameter);
+            ctx.fillStyle = fill;
+            const { x, y } = new DOMMatrix()
+                .translate(0, 0)
+                .rotate(rot)
+                .transformPoint({ x: -diameter / 2, y: -diameter / 2 });
+            ctx.translate(x + diameter / 2 + tx, y + diameter / 2 + ty);
+            ctx.rotate((rot * Math.PI) / 180);
+
+            ctx.fill(p);
+            ctx.resetTransform();
+        }
+        return canvas;
+    }
+
+    generateAvatarPNG(address: string, quality: number = 2) {
+        const size = (quality > 1 ? Math.min(10, quality) : 1) * 100;
+        return this.canvasRender(address, size).toDataURL('image/png', 1);
+    }
+
     generateAvatarHTML(address: string) {
         this.mt.init_seed(addressToNumber(address));
         const remainingColors = this.hueShift(colors.slice());
@@ -198,6 +242,11 @@ export function generateAvatarURL(address: string) {
 export function generateAvatarHTML(address: string) {
     const wag = new WalletAvatarGenerate(new MersenneTwister());
     return wag.generateAvatarHTML(address);
+}
+
+export function generateAvatarPNG(address: string, quality?: number) {
+    const wag = new WalletAvatarGenerate(new MersenneTwister());
+    return wag.generateAvatarPNG(address, quality);
 }
 
 export default generateAvatarSVG;
